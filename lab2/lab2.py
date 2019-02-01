@@ -14,6 +14,7 @@ image_out = grayscale(image_in)
 
 # Output the image to a file
 # getting error 'cannot write mode F as JPEG', convert('L') fixes it
+# fix this without using convert('L') because thats cheating.
 Image.fromarray(image_out).convert('L').save('test_img_out1.jpg')
 
 # view the image
