@@ -21,9 +21,12 @@ imdat = np.asarray(pilim, np.float) # put PIL image into numpy array of floats
 grad_x = signal.convolve2d(imdat, kernel_x)
 grad_y = signal.convolve2d(imdat, kernel_y)
 
-#TODO: how to implement threshold?
-
 edge = np.sqrt(grad_x**2 + grad_y**2)
+
+#TODO: how to implement threshold?
+threshold = 220
+threshold_idx = np.where(edge < threshold)
+edge[threshold_idx] = 0
 
 Image.fromarray(edge).convert('L').save(out_filename)
 Image.fromarray(edge).show()
