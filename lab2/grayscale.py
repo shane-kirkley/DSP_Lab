@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image
+import sys
 
 Y = np.array([.299, .587, .114])
 
@@ -7,15 +8,14 @@ Y = np.array([.299, .587, .114])
 def grayscale(img):
     return np.clip(np.dot(img[:,:,:3], Y), 0, 255)
 
-pil_image_in = Image.open('test01.jpg')
+pil_image_in = Image.open(sys.argv[1])
 image_in = np.asarray(pil_image_in, np.uint8)
+filename_out = sys.argv[2]
 
 image_out = grayscale(image_in)
 
 # Output the image to a file
-# getting error 'cannot write mode F as JPEG', convert('L') fixes it
-# fix this without using convert('L') because thats cheating.
-Image.fromarray(image_out).convert('L').save('test_img_out1.jpg')
+Image.fromarray(image_out.astype(np.uint8)).save(filename_out)
 
 # view the image
 Image.fromarray(image_out).show()

@@ -23,10 +23,9 @@ grad_y = signal.convolve2d(imdat, kernel_y)
 
 edge = np.sqrt(grad_x**2 + grad_y**2)
 
-#TODO: how to implement threshold?
-threshold = 220
-threshold_idx = np.where(edge < threshold)
-edge[threshold_idx] = 0
+#TODO: Better way to implement threshold?
+threshold = 200
+edge[edge < threshold] = 0
 
 Image.fromarray(edge).convert('L').save(out_filename)
 Image.fromarray(edge).show()
