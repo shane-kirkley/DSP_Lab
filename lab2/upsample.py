@@ -31,7 +31,7 @@ print(f"Original Image size: Rows={R}, Cols={C}")
 img_up = np.zeros((int(R*N), int(C*N)))
 
 # nested for loops over the smaller img
-#TODO: this is very slow, make it better
+#TODO: this is very slow, make it better?
 for i in range(R - 1):
     for j in range(C - 1):
         x = np.array([i, i+1])
