@@ -33,24 +33,29 @@ last_idx = 1
 # this loop creates remap array
 for intensity in range(1, 255):
     curr_sum = curr_sum + histogram[intensity]
+    remap[intensity] = out_val
     if curr_sum > T:
-        remap[last_idx:intensity] = out_val
+        #remap[last_idx:intensity] = out_val
         out_val = round(curr_sum / P)
         T = out_val * P
-        last_idx = intensity
+        #last_idx = intensity
 
-remap[remap == 0] = 254 # values that are missed when final target isn't hit
+# remap[remap == 0] = 254 # values that are missed when final target isn't hit
 remap[0] = 0
 remap[255] = 255
+
+new_imdat = np.zeros(imdat.shape)
 
 # change intensity values in image to remapped values
 for intensity in range(0, 256):
     print("setting " + str(intensity) + " to " + str(remap[intensity]))
-    imdat[imdat == intensity] = remap[intensity]
+    new_imdat[imdat == intensity] = remap[intensity]
 
 # create new histogram
 for intensity in range(0, 256):
-    histogram[intensity] = (imdat == intensity).sum()
+    histogram[intensity] = (new_imdat == intensity).sum()
+plt.plot(remap)
+plt.show()
 
 plt.plot(histogram)
 plt.xlabel('Intensity')
@@ -58,5 +63,5 @@ plt.ylabel('Number of Pixels')
 plt.title('Remapped Histogram')
 plt.show()
 
-Image.fromarray(imdat).convert('L').save(filename_out)
-Image.fromarray(imdat).show()
+Image.fromarray(new_imdat).convert('L').save(filename_out)
+Image.fromarray(new_imdat).show()
