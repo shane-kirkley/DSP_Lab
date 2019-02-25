@@ -53,18 +53,23 @@ for i in range(source.shape[0]):
     V[2*i] = [source[i,0], source[i,1], 1, 0, 0, 0, -1*target[i,0]*source[i,0], -1*target[i,0]*source[i,1]]
     V[2*i+1] = [0, 0, 0, source[i,0], source[i,1], 1, -1*target[i,1]*source[i,0], -1*target[i,1]*source[i,1]]
 
+# find H by getting inverse of V, dot with T, append 1 and reshape to square.
 h = np.dot(psuedo_inverse(V), T)
 h = np.append(h, 1)
 H = np.reshape(h, (3,3))
 
-v = np.dot(H, np.array([800, 300, 1]))
-print(v[0]/v[2])
-print(v[1]/v[2])
-print(v[2])
+# verify H is correct for some known points
+# v = np.dot(H, np.array([800, 300, 1]))
+# print(v[0]/v[2])
+# print(v[1]/v[2])
+# print(v[2])
 
+# loop through new image pixels and remap
 for a in range(new_imdat.shape[0]):
     for b in range(new_imdat.shape[1]):
         # find the c,d from input image corresponding to a,b
+        # using inverse of H...
+        
         # use bilinear_interp to get value of corresponding pixel
 
 
