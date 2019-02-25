@@ -27,7 +27,7 @@ data = np.array([[1,     8,   3], \
 hunger = np.array([65.66, -1763.1, 195.2, 3625, 716.9, 339, -25.5, 1677.1])
 
 x = np.dot(psuedo_inverse(data), hunger)
-# expect: [33.58247623 -3.92922799 -2.26763077]
+print("Coeffficients:")
 print(x)
 
 predict = np.dot(data,x)

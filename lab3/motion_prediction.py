@@ -6,18 +6,18 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import me_method as me
 
-filename_out = "xipredict.jpg"
+filename_out = "rabbitpredict.jpg"
 
 # N is block size
 N = 16
 
 # get frame n data
-pilim = Image.open("xi01.jpg")
+pilim = Image.open("rabbit0.jpg")
 n_imdat_rgb = np.asarray(pilim, np.float)
 n_imdat_bw = np.asarray(pilim.convert('L'), np.float)
 
 # get frame n+1 data
-pilim = Image.open("xi02.jpg")
+pilim = Image.open("rabbit1.jpg")
 n1_imdat_rgb = np.asarray(pilim, np.float)
 n1_imdat_bw = np.asarray(pilim.convert('L'), np.float)
 
@@ -54,7 +54,7 @@ plt.quiver(X,Y,U,V)
 plt.title("Motion Estimation")
 plt.xlabel("Horizontal Block Number")
 plt.ylabel("Vertical Block Number")
-plt.ion()
+# plt.ion()
 plt.show()
 val = input('hit enter to continue')
 

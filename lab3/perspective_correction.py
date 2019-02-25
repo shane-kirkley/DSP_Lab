@@ -59,17 +59,24 @@ h = np.append(h, 1)
 H = np.reshape(h, (3,3))
 
 # verify H is correct for some known points
-# v = np.dot(H, np.array([800, 300, 1]))
-# print(v[0]/v[2])
-# print(v[1]/v[2])
-# print(v[2])
+v = np.dot(H, np.array([312, 334, 1]))
+print(v[0]/v[2])
+print(v[1]/v[2])
+print(v[2])
+
+remap = np.zeros(imdat.shape)
+for c in range(remap.shape[0]):
+    for d in range(remap.shape[1]):
+        # for each c,d get vector v
+        remap[c,d] = np.dot(H,np.array([c, d, 1]))
 
 # loop through new image pixels and remap
 for a in range(new_imdat.shape[0]):
     for b in range(new_imdat.shape[1]):
         # find the c,d from input image corresponding to a,b
         # using inverse of H...
-        
+        coord = np.where(remap == np.array([a, b, 1]))
+        new_imdat[a, b] = bi.bilinear_interp(coord[0]/coord[2], coord[1]/coord[2], imdat)
         # use bilinear_interp to get value of corresponding pixel
 
 
