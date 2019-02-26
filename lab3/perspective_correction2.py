@@ -22,10 +22,10 @@ source = np.array([[339, 294], [334, 312], [329, 331], [322, 358], [314, 388], \
                    [488, 421], [499, 469], [515, 532], [539, 617], [573, 745] ])
 
 # array of points in new image (a, b)
-target = np.array([[200, 90] , [200, 180], [200, 270], [200, 360], [200, 450], \
-                   [200, 540], [200, 630], [200, 720], [200, 810], [200, 900], \
-                   [600, 90] , [600, 180], [600, 270], [600, 360], [600, 450], \
-                   [600, 540], [600, 630], [600, 720], [600, 810], [600, 900] ])
+target = np.array([[300, 90] , [300, 180], [300, 270], [300, 360], [300, 450], \
+                   [300, 540], [300, 630], [300, 720], [300, 810], [300, 900], \
+                   [500, 90] , [500, 180], [500, 270], [500, 360], [500, 450], \
+                   [500, 540], [500, 630], [500, 720], [500, 810], [500, 900] ])
                    
 T = target.flatten()
 V = np.zeros((40, 8))
@@ -56,6 +56,6 @@ for a in range(new_imdat.shape[0]):
         # use bilinear_interp to assign value of corresponding pixel
         new_imdat[a,b] = bi.bilinear_interp(d, c, imdat)
 
-Image.fromarray(new_imdat.astype('uint8')).save("test1.jpg")
+Image.fromarray(new_imdat.astype('uint8')).save("test2.jpg")
 Image.fromarray(new_imdat.astype('uint8')).show()
 
