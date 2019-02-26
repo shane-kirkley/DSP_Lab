@@ -50,8 +50,12 @@ V = np.zeros((40, 8))
 
 # for each point fill in two rows of V (can this be done cleaner?)
 for i in range(source.shape[0]):
-    V[2*i] = [source[i,0], source[i,1], 1, 0, 0, 0, -1*target[i,0]*source[i,0], -1*target[i,0]*source[i,1]]
-    V[2*i+1] = [0, 0, 0, source[i,0], source[i,1], 1, -1*target[i,1]*source[i,0], -1*target[i,1]*source[i,1]]
+    c = source[i,0]
+    d = source[i,1]
+    a = target[i,0]
+    b = target[i,1]
+    V[2*i] = [c, d, 1, 0, 0, 0, -1*a*c, -1*a*d]
+    V[2*i+1] = [0, 0, 0, c, d, 1, -1*b*c, -1*b*d]
 
 # find H by getting inverse of V, dot with T, append 1 and reshape to square.
 h = np.dot(psuedo_inverse(V), T)
@@ -71,9 +75,13 @@ for a in range(new_imdat.shape[0]):
     for b in range(new_imdat.shape[1]):
         # find the c,d from input image corresponding to a,b
         # using inverse of H...
+        v  = np.array([a, b, 1])
+        cd = np.dot(inv(H), v)
+        c = cd[0]/cd[2]
+        d = cd[1]/cd[2]
 
         # use bilinear_interp to get value of corresponding pixel
-
+        new_imdat[a,b] = bi.bilinear_interp(c,d,imdat)
 
 Image.fromarray(new_imdat.astype('uint8')).save("test1.jpg")
 Image.fromarray(new_imdat.astype('uint8')).show()
