@@ -34,17 +34,28 @@ imdat = np.asarray(pilim, np.float)  # put PIL image into numpy array of floats
 new_imdat = np.zeros(imdat.shape)
 
 # array of selected points from original image (c, d)
-source = np.array([[294, 339], [312, 334], [331, 329], [358, 322], [388, 314], \
-                   [426, 304], [475, 291], [537, 275], [625, 250], [754, 214], \
-                   [290, 455], [308, 460], [328, 465], [353, 471], [384, 479], \
-                   [421, 488], [469, 499], [532, 515], [617, 539], [745, 573] ])
+# source = np.array([[294, 339], [312, 334], [331, 329], [358, 322], [388, 314], \
+#                    [426, 304], [475, 291], [537, 275], [625, 250], [754, 214], \
+#                    [290, 455], [308, 460], [328, 465], [353, 471], [384, 479], \
+#                    [421, 488], [469, 499], [532, 515], [617, 539], [745, 573] ])
+
+# # array of points in new image (a, b)
+# target = np.array([[90, 200] , [180, 200], [270, 200], [360, 200], [450, 200], \
+#                    [540, 200], [630, 200], [720, 200], [810, 200], [900, 200], \
+#                    [90, 600] , [180, 600], [270, 600], [360, 600], [450, 600], \
+#                    [540, 600], [630, 600], [720, 600], [810, 600], [900, 600] ])
+
+source = np.array([[339, 294], [334, 312], [329, 331], [322, 358], [314, 388], \
+                   [304, 426], [291, 475], [275, 537], [250, 625], [214, 754], \
+                   [455, 290], [460, 308], [465, 328], [471, 353], [479, 384], \
+                   [488, 421], [499, 469], [515, 532], [539, 617], [573, 745] ])
 
 # array of points in new image (a, b)
-target = np.array([[90, 200] , [180, 200], [270, 200], [360, 200], [450, 200], \
-                   [540, 200], [630, 200], [720, 200], [810, 200], [900, 200], \
-                   [90, 600] , [180, 600], [270, 600], [360, 600], [450, 600], \
-                   [540, 600], [630, 600], [720, 600], [810, 600], [900, 600] ])
-
+target = np.array([[200, 90] , [200, 180], [200, 270], [200, 360], [200, 450], \
+                   [200, 540], [200, 630], [200, 720], [200, 810], [200, 900], \
+                   [600, 90] , [600, 180], [600, 270], [600, 360], [600, 450], \
+                   [600, 540], [600, 630], [600, 720], [600, 810], [600, 900] ])
+                   
 T = target.flatten()
 V = np.zeros((40, 8))
 
@@ -62,26 +73,18 @@ h = np.dot(psuedo_inverse(V), T)
 h = np.append(h, 1)
 H = np.reshape(h, (3,3))
 
-#######################
-# verify H is correct for some known points
-v = np.dot(H, np.array([312, 334, 1]))
-print(v[0]/v[2])
-print(v[1]/v[2])
-print(v[2])
-#######################
-
 # loop through new image pixels and remap
 for a in range(new_imdat.shape[0]):
     for b in range(new_imdat.shape[1]):
         # find the c,d from input image corresponding to a,b
         # using inverse of H...
-        v  = np.array([a, b, 1])
+        v = np.array([a, b, 1])
         cd = np.dot(inv(H), v)
         c = cd[0]/cd[2]
         d = cd[1]/cd[2]
 
         # use bilinear_interp to get value of corresponding pixel
-        new_imdat[a,b] = bi.bilinear_interp(c,d,imdat)
+        new_imdat[a,b] = bi.bilinear_interp(d, c, imdat)
 
 Image.fromarray(new_imdat.astype('uint8')).save("test1.jpg")
 Image.fromarray(new_imdat.astype('uint8')).show()
