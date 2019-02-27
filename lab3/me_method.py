@@ -37,9 +37,10 @@ def motion_match(row_start, col_start, search_range, block_bw, im_bw, im_rgb):
   mse = np.zeros( (rb - rt + 1, cr - cl + 1), np.float )
   for k in range(rt, rb + 1) :
     for l in range(cl, cr + 1) :
-      mse[k-rt, l-cl] = np.mean(  (  block_bw.astype(np.float)
+      ### shane changed MSE to MAE. ###
+      mse[k-rt, l-cl] = np.mean(  np.absolute(  block_bw.astype(np.float)
                                    - im_bw[k:k+16, l:l+16].astype(np.float)  
-                                  )**2   
+                                  ) 
                                )
   # min_index is w.r.t flattened array.  Find the index of the minimum
   # mse, and convert it to 2D indices

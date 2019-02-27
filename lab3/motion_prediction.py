@@ -29,15 +29,7 @@ V = []
 X = []
 Y = []
 
-"""
-U and V hold the x and y components of the vectors to be graphed, 
-and X and Y hold the x and y coordinates of the locations of the vector tails.
-So together, U [n], V [n], X[n], and Y [n] specify the n’th
-vector’s direction and tail location.
-"""
-
 # for each block in frame n+1, find the matched block in frame n
-
 for row in range(math.floor(n1_imdat_bw.shape[0]/N)):
     for col in range(math.floor(n1_imdat_bw.shape[1]/N)):
         # extract the block from frame n+1

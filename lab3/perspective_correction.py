@@ -5,9 +5,6 @@ from numpy.linalg import inv
 from PIL import Image
 import bilinear_interp as bi
 
-# choose 20 points, from left to right on two seperate straight lines (10 on each)
-# og image size: 1067 x 800
-
 def psuedo_inverse(A):
     return inv(A.T.dot(A)).dot(A.T)
 
@@ -58,4 +55,3 @@ for a in range(new_imdat.shape[0]):
 
 Image.fromarray(new_imdat.astype('uint8')).save("test1.jpg")
 Image.fromarray(new_imdat.astype('uint8')).show()
-
