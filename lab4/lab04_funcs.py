@@ -47,17 +47,53 @@ def pqmf(input):
     X = np.roll(X, 32)
     X[:32] = np.flip(input[row])
     Z = C * X
-    Y = 8 * Z[:64] + 1792
+
+    # reshape Z to make the partial calculation easier
+    Z = np.reshape(Z, (8, 64))
+    v = np.ones(8, np.float)
+    Y = v.dot(Z)
+
+    # TODO: matrix multiply to get S = M * Y
     S = np.zeros(32)
     for i in range(32):
       S[i] = np.dot(Y, M[:,i])
-    output[row] = S * modulate
+
+    # invert odd coefficients of odd subbands
+    if row % 2:
+      output[row] = S * modulate
 
   return output
 
 def ipqmf(coefficents):
-  raise NotImplementedError()
   """
   input is a buffer of coefficients computed by pqmf.
-  Output array recons has same size as coefficients, and contains the reconstreucted audio data.
+  Output array has same size as coefficients, and contains the reconstreucted audio data.
   """
+  V = np.zeros(1024)
+  D = load_d_taps(D_TAP_FILENAME)
+  output = np.zeros(coefficents.shape)
+  N = np.zeros((32,64))
+  for i in range(64):
+    for k in range(32):
+      N[k,i] = np.cos((2*k+1)*(16+i)*np.pi/64)
+  rows = coefficents.shape[0]
+
+  for row in range(rows):
+    S = coefficents[row] # input 32 new subband samples
+    V = np.roll(V, 64)   # shifting
+    for i in range(64):       # matrixing
+      V[i] = N[:,i].dot(S)
+    # build a 512 value vector U
+    U = np.zeros(512)
+    for i in range(8):
+      for j in range(32):
+        U[i*64+j] = V[i*128+j]
+        U[i*64+32+j] = V[i*128+96+j]
+    # window by 512 coefficients
+    W = U * D
+    W = np.reshape(W, (16, 32))
+    v = np.ones(16, np.float)
+    S = v.dot(W)
+    output[row] = S
+
+  return output
