@@ -14,13 +14,17 @@ coeffs = lab4.pqmf(data)
 
 synth = lab4.ipqmf(coeffs).flatten()
 
-plt.plot(data, linewidth=0.5)
-plt.plot(synth, linewidth=0.5)
-plt.xlim(0, 1024)
-plt.show()
+plt.plot(data, linewidth=0.7)
+plt.plot(synth, linewidth=0.7)
 
 data = data[:synth.shape[0]] # trim data to match synth
 diff = abs(data[:-481] - synth[481:]) # delay found experimentally (expected 512)
 err = np.max(diff)
-print("Absolute max error:")
-print(err)
+
+plt.title("Original data for %s (blue)\nand reconstructed data (orange)\nmax error = %f" % (sys.argv[1], err))
+plt.xlim(0, fs*5)
+plt.xlabel("Sample")
+plt.ylabel("Amplitude")
+plt.show()
+
+

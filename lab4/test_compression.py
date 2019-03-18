@@ -13,6 +13,7 @@ def synth_error(data, synth):
     diff = abs(data[:-481] - synth[481:]) # delay found experimentally (expected 512)
     return np.max(diff)
 
+
 fs, data = wavfile.read(sys.argv[1])
 data = data[:fs*5] # trim to 5 seconds
 coeffs = lab4.pqmf(data)
@@ -27,6 +28,7 @@ if (TEST_LOW):
         err[i] = synth_error(data, synth)
 
     plt.bar(range(12),err)
+    plt.title("Error from ommiting low frequency sub-bands from %s" % sys.argv[1])
     plt.ylabel("Absolute Maximum Error")
     plt.xlabel("Low bands removed")
     plt.show()
@@ -42,6 +44,7 @@ if (TEST_HIGH):
         err[i] = synth_error(data, synth)
 
     plt.bar(range(num_bands),err)
+    plt.title("Error from ommiting high frequency sub-bands from %s" % sys.argv[1])
     plt.ylabel("Absolute Maximum Error")
     plt.xlabel("High bands removed")
     plt.show()

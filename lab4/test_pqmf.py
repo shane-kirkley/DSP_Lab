@@ -11,4 +11,7 @@ data = data[:fs*5] # trim to 5 seconds
 coeffs = lab4.pqmf(data)
 
 plt.plot(coeffs.T.flatten(), linewidth=0.5)
+plt.xlabel("Coefficient index")
+plt.ylabel("Coefficient value")
+plt.title("Psuedo-QMF Subband Coefficients for %s" % sys.argv[1])
 plt.show()
