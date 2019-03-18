@@ -12,19 +12,15 @@ coeffs = lab4.pqmf(data)
 # plt.plot(coeffs.T.flatten(), linewidth=0.5)
 # plt.show()
 
-synth = lab4.ipqmf(coeffs)
-synth = synth.flatten()
+synth = lab4.ipqmf(coeffs).flatten()
 
-#plt.subplot(2,1,1)
 plt.plot(data, linewidth=0.5)
-#plt.subplot(2,1,2)
-plt.plot(synth.flatten(), linewidth=0.5)
+plt.plot(synth, linewidth=0.5)
+plt.xlim(0, 1024)
 plt.show()
 
-synth[:-512] = synth[512:]
-synth = synth[:512]
-data = data[:synth.shape[0]]
-
-diff = data - synth
+data = data[:synth.shape[0]] # trim data to match synth
+diff = abs(data[:-481] - synth[481:]) # delay found experimentally (expected 512)
 err = np.max(diff)
+print("Absolute max error:")
 print(err)
