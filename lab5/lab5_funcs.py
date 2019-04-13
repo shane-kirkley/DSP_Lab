@@ -5,18 +5,19 @@ import sys
 from PIL import Image
 from scipy.fftpack import dct
 from scipy.fftpack import idct
+import useful_arrays
 
 """
 Forward DCT for use on 2D arrays. Applies DCT to rows then columns.
 """
 def forward_dct(input):
-    return dct(dct(input).T).T
+    return dct(dct(input, norm='ortho').T, norm='ortho').T
 
 """
 Inverse forward DCT for use on 2D arrays. Applies idct to columns then rows.
 """
 def inverse_forward_dct(input):
-    return idct(idct(input.T).T)
+    return idct(idct(input.T, norm='ortho').T, norm='ortho')
 
 """
 Helper fcn to return an array of shape (nblocks, rows, cols) 
@@ -27,29 +28,27 @@ def blockshape(arr, rows, cols):
     return arr.reshape(h//rows, rows, -1, cols).swapaxes(1,2).reshape(-1, rows, cols)
 
 """
-Helper fcn to return 1d array of zig-zag order elements from 2d array
+Helper fcn to return 1d array of size 64 of zig-zag order elements from 8x8 2d array
 """
-def zigzag(arr):
-    np.concatenate([np.diagonal(arr[::-1,:], i)[::(2*(i % 2)-1)] for i in range(1-arr.shape[0], arr.shape[0])])
+
+def zigzag(input):
+    zz = useful_arrays.zz
+    output = np.zeros(64)
+    for i in range(64):
+        idx = zz[i]
+        output[i] = input[idx[0],idx[1]]
+    return output
+
 
 """
 Helper fcn to reverse the zigzag function (column to 2d-array)
 """
-def zigzag_reverse(arr, block_size):
-    output = np.zeros((block_size, block_size))
-    index = -1
-    bound = 0
-    for i in range(2*block_size - 1):
-        if i < block_size:
-            bound = 0
-        else:
-            bound = i - block_size + 1
-        for j in range(bound, i - bound + 1):
-            index = index + 1
-            if i % 2:
-                output[j, i-j] = input[index]
-            else:
-                output[i-j, j] = input[index]
+def zigzag_reverse(input):
+    zz = useful_arrays.zz
+    output = np.zeros((8,8))
+    for i in range(64):
+        idx = zz[i]
+        output[idx[0], idx[1]] = input[i]
     return output
 
 """
@@ -70,7 +69,7 @@ def dctmgr(img_data):
         # transform each block
         block = forward_dct(block)
         # zig-zag data from blocks to coeffecient columns.
-        coeffs[:block_num] = zigzag(block)
+        coeffs[:,block_num] = zigzag(block)
         # replace DC coeffs with differentially encoded values
         if (block_num % cols) != 0:
             coeffs[0, block_num] = coeffs[0, block_num] - coeffs[0, block_num-1]
@@ -83,16 +82,14 @@ Lab assignment 2
 Input: Coefficient array of size 64 x N
 Output: 2D array of grayscale image data.
 """
-def idctmgr(coeff):
+def idctmgr(coeff, block_size):
     nblocks = coeff.shape[1]
+    img_data = np.zeros((nblocks*block_size, nblocks*block_size))
+    
     # for each block b, column coeffs[:,b] is used to reconstruct the block.
-    
     # undo prediction with DC coeffs
-    for block in range(nblocks)
     # reverse zig-zag into a block
-    
     # use inverse 2d dct function on block.
-    
     # put data into 2d array of img data.
-
+    
     raise NotImplementedError
