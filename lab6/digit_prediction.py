@@ -21,13 +21,13 @@ rows = len(data[0])
 print(f"Number of images in a data set is {rows}")
 e = np.dtype(data[0][0])
 cols = len(e.names) - 1
-printf(f"Number of pixels in each image is {cols}")
+print(f"Number of pixels in each image is {cols}")
 X = np.zeros((rows,cols), np.float)
 y = np.zeros(rows, np.float)
 for j in range(rows):
     tmplist = data[0][j].tolist()
     X[j] = np.asarray(tmplist[:-1], np.float)
-    X[j] = np.float(tmplist[-1])
+    y[j] = np.float(tmplist[-1])
 print("done")
 
 # rescale the range of data to 0-1
@@ -35,11 +35,17 @@ X = X / 255
 
 # extract the training set to get X_train and y_train...
 # first 60,000 images for training
+X_train = X[:60000]
+y_train = y[:60000]
 
 # extract the test set to get X_test and y_test...
 # last 10,000 images for test
+X_test = X[60000:]
+y_test = y[60000:]
 
 # define and train the model, make predictions
-mlp = MLPClassifier(hidden_layer_sizes=(100,100), max_iter=400, alpha=1e-4, solver='sgd', verbose=10, tol=1e-4, random_state=1)
+mlp = MLPClassifier(hidden_layer_sizes=(100,100), learning_rate_init=0.1, max_iter=400, alpha=1e-4, solver='sgd', verbose=10, tol=1e-4, random_state=1)
 mlp.fit(X_train, y_train)
 yhat = mlp.predict(X_test)
+
+correct = np.sum(y_test == yhat) / y_test.shape[0]
