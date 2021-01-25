@@ -4,7 +4,7 @@ Lab2 - Image processing
 
 Lab3 - Perspective transformation and motion tracking
 
-Lab5 - MPEG audio processing 
+Lab4 - MPEG audio processing 
 
 Lab5 - JPEG image compression
 
